@@ -1,0 +1,46 @@
+{
+  "items": [
+    {
+      "id": "home",
+      "label": "Home",
+      "href": "#home",
+      "order": 0
+    },
+    {
+      "id": "about",
+      "label": "About",
+      "href": "#about",
+      "order": 1
+    },
+    {
+      "id": "services",
+      "label": "Services",
+      "href": "#services",
+      "order": 2
+    },
+    {
+      "id": "industries",
+      "label": "Industries",
+      "href": "#industries",
+      "order": 3
+    },
+    {
+      "id": "jobs",
+      "label": "Jobs",
+      "href": "#jobs",
+      "order": 4
+    },
+    {
+      "id": "contact",
+      "label": "Contact",
+      "href": "#contact",
+      "order": 5
+    },
+    {
+      "id": "testimonials",
+      "label": "What Our Clients Say",
+      "href": "#testimonials",
+      "order": 6
+    }
+  ]
+}

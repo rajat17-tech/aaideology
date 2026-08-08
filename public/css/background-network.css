@@ -1,0 +1,27 @@
+/* ============================================================
+   Live network background — fixed, full-viewport canvas.
+   Dots represent clients/candidates; lines represent the
+   connections Aaideology makes between them. Sits behind every
+   section (z-index handled in style.css via .page-content{ z-index: 1 })
+   and keeps animating underneath the page regardless of scroll.
+   ============================================================ */
+
+#networkBg{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh; /* modern browsers: avoids mobile browser-chrome jumpiness */
+  z-index: 0;
+  display: block;
+  pointer-events: none; /* never intercepts clicks/scroll on real content */
+  /* Slightly deeper than pure white so the indigo/violet nodes and lines
+     have real contrast to sit on, even where a section's veil is at its
+     most transparent. */
+  background: #E7E9F5;
+}
+
+@media (prefers-reduced-motion: reduce){
+  #networkBg{ background: #E7E9F5; }
+}

@@ -1,0 +1,332 @@
+{
+  "hero": {
+    "headline": "The Perfect Source for Your Hiring Needs",
+    "subheadline": "Connecting top talent with leading companies. We make recruitment simple, fast, and effective.",
+    "ctaText": "Get Started",
+    "ctaLink": "#contact",
+    "visible": true
+  },
+  "about": {
+    "tag": "ABOUT US",
+    "title": "Who We Are",
+    "description": "We are a professional <strong>HR & Recruitment Service Provider</strong> dedicated to helping companies find the right talent, at the right time, at the right cost. We act as your extended hiring team \u2014 without the overhead of a full-time HR department.",
+    "companyBackground": "Founded with a vision to simplify hiring for growing businesses, we started as a recruitment consultancy and have grown into a trusted hiring partner for companies across IT, Manufacturing, Sales, Healthcare, Retail, and more.",
+    "mission": "To help companies grow by providing fast, affordable, and high-quality recruitment solutions that save time, reduce hiring risk, and improve workforce quality.",
+    "image": "images/about-banner.png",
+    "visible": true
+  },
+  "stats": {
+    "visible": true,
+    "items": [
+      {
+        "icon": "users",
+        "number": 5000,
+        "suffix": "+",
+        "label": "Candidates Placed"
+      },
+      {
+        "icon": "building",
+        "number": 200,
+        "suffix": "+",
+        "label": "Companies Served"
+      },
+      {
+        "icon": "target",
+        "number": 15,
+        "suffix": "+",
+        "label": "Industries Covered"
+      },
+      {
+        "icon": "clock",
+        "number": 98,
+        "suffix": "%",
+        "label": "Client Satisfaction"
+      }
+    ]
+  },
+  "values": {
+    "visible": true,
+    "tag": "What Guides Us",
+    "title": "Our core values",
+    "items": [
+      {
+        "icon": "shield",
+        "title": "Integrity",
+        "description": "We work with honesty and transparency",
+        "color": "#3b82f6"
+      },
+      {
+        "icon": "star",
+        "title": "Quality",
+        "description": "We focus on delivering the best-fit candidates",
+        "color": "#f59e0b"
+      },
+      {
+        "icon": "zap",
+        "title": "Speed",
+        "description": "We ensure faster turnaround time in hiring",
+        "color": "#ef4444"
+      },
+      {
+        "icon": "heart",
+        "title": "Commitment",
+        "description": "We are dedicated to client success",
+        "color": "#ec4899"
+      },
+      {
+        "icon": "award",
+        "title": "Professionalism",
+        "description": "We follow a structured and reliable process",
+        "color": "#22c55e"
+      },
+      {
+        "icon": "handshake",
+        "title": "Partnership",
+        "description": "We believe in long-term business relationships",
+        "color": "#3b82f6"
+      }
+    ]
+  },
+  "industries": {
+    "visible": true,
+    "tag": "Where We Work",
+    "title": "Industries & domains served",
+    "subtitle": "We recruit and support hiring across a wide range of fast-moving, high-growth sectors. Click any card to see the roles we hire for.",
+    "items": [
+      {
+        "icon": "layers",
+        "title": "IT & Software",
+        "roles": [
+          "Full Stack Developer",
+          "Senior Frontend Developer",
+          "Frontend Developer",
+          "React.js Developer",
+          "Python Developer",
+          "Python API Developer",
+          "Java Developer",
+          ".NET Developer",
+          "DevOps Engineer",
+          "Cloud Data Engineer",
+          "Data Engineer",
+          "Data Analyst",
+          "AI Engineer",
+          "AI Manager",
+          "AI Marketing Associate",
+          "ETL Developer",
+          "SQL Developer",
+          "Oracle Developer",
+          "SAP Consultant",
+          "Microsoft Dynamics & Power Platform Engineer",
+          "Amazon Connect L3 SME",
+          "MPCS Techno-Functional Consultant",
+          "CRM Specialist",
+          "UI/UX Designer",
+          "QA Engineer",
+          "Product Testing Engineer",
+          "Network Security Engineer",
+          "Technical Content Writer",
+          "SEO Specialist",
+          "Digital Marketing Specialist",
+          "PPC Manager"
+        ]
+      },
+      {
+        "icon": "dollar-sign",
+        "title": "Finance & Accounts",
+        "roles": [
+          "CA",
+          "Semi Qualified CA",
+          "US Accountant",
+          "US Accounting (Junior/Mid/Manager)",
+          "UK Accounting (AM/Manager)",
+          "Australian Payroll",
+          "US Payroll",
+          "UK Payroll",
+          "US Bookkeeper",
+          "Financial Planning & Analyst",
+          "Financial Controller",
+          "Bookkeeper",
+          "Payroll & Admin Officer",
+          "Executive Assistant (Accounts)",
+          "Legal Advisor"
+        ]
+      },
+      {
+        "icon": "user-plus",
+        "title": "HR & Recruitment",
+        "roles": [
+          "HR Executive",
+          "HR Generalist",
+          "US HR Generalist",
+          "HR Manager",
+          "Deputy HR Manager",
+          "L&D (Learning & Development)",
+          "Recruiter",
+          "Senior Recruiter",
+          "US IT Recruiter",
+          "US IT Recruitment",
+          "US IT Director"
+        ]
+      },
+      {
+        "icon": "users",
+        "title": "BPO / Customer Support",
+        "roles": [
+          "Customer Service Associate",
+          "International Process Associate",
+          "Chat Support Executive",
+          "Process Associate",
+          "US Dispatch",
+          "Driver Helpdesk",
+          "Telecaller",
+          "Team Lead",
+          "Quality Analyst",
+          "Process Trainer",
+          "CRE Domestic",
+          "CRE Intern"
+        ]
+      },
+      {
+        "icon": "target",
+        "title": "Sales, Marketing & Business Development",
+        "roles": [
+          "Business Development Executive",
+          "BDE Intern",
+          "Sales Executive",
+          "Field Sales Executive",
+          "Relationship Manager",
+          "State Manager",
+          "Lead Generation Specialist",
+          "MIS Executive",
+          "Social Media Executive",
+          "Dealer Network Sales",
+          "Telesales Executive"
+        ]
+      },
+      {
+        "icon": "building",
+        "title": "Engineering, Manufacturing & Operations",
+        "roles": [
+          "Production Executive",
+          "Production Engineer",
+          "Production Manager",
+          "Mechanical Maintenance Engineer",
+          "Mechanical Manager",
+          "Civil Manager",
+          "E&I Manager",
+          "QC Manager",
+          "Purchase Executive",
+          "Purchase Manager",
+          "Store Manager",
+          "Dispatch & Packing Officer",
+          "EV Technician",
+          "PCB Designer",
+          "Drone Pilot",
+          "Animal Feed Plant Manager",
+          "WSC Production Engineer",
+          "AC Manager (Edible Oil/Oleochemical)"
+        ]
+      },
+      {
+        "icon": "compass",
+        "title": "Logistics",
+        "roles": [
+          "Freight Broker",
+          "Logistics Brokerage Specialist",
+          "Transport Coordinator"
+        ]
+      },
+      {
+        "icon": "folder",
+        "title": "Creative & Administration",
+        "roles": [
+          "Executive Assistant",
+          "Creative Designer",
+          "Graphic Designer",
+          "Back Office Executive",
+          "Office Assistant",
+          "Business Presentation Specialist",
+          "Research Analyst"
+        ]
+      },
+      {
+        "icon": "book-open",
+        "title": "Education",
+        "roles": [
+          "NEET Faculty",
+          "Tele Counsellor"
+        ]
+      }
+    ]
+  },
+  "services": {
+    "tag": "OUR SERVICES",
+    "title": "Comprehensive HR Solutions",
+    "subtitle": "End-to-end Human Resource services designed to support business growth, ensure compliance, and enhance employee engagement.",
+    "visible": true
+  },
+  "serviceList": [
+    {
+      "title": "Talent Acquisition & Recruitment",
+      "description": "Strategic recruitment solutions to attract, assess, and onboard top talent aligned with your organizational goals.",
+      "icon": "search",
+      "color": "#3b82f6"
+    },
+    {
+      "title": "HR Operations & Administration",
+      "description": "Manage and streamline day-to-day HR functions to ensure operational efficiency and policy compliance.",
+      "icon": "folder",
+      "color": "#a855f7"
+    },
+    {
+      "title": "Onboarding & Employee Experience",
+      "description": "Structured onboarding programs that foster engagement and ensure smooth employee integration.",
+      "icon": "user-plus",
+      "color": "#ec4899"
+    },
+    {
+      "title": "Career Related Counselling",
+      "description": "One-on-one guidance to help candidates map career paths, sharpen interview readiness, and make confident, informed job decisions.",
+      "icon": "compass",
+      "color": "#10b981"
+    },
+    {
+      "title": "Statutory Compliance",
+      "description": "Full adherence to applicable labor laws and statutory regulations to mitigate legal risks.",
+      "icon": "scale",
+      "color": "#f59e0b"
+    },
+    {
+      "title": "Background Verification (BGV)",
+      "description": "Reliable and confidential BGV services for informed hiring decisions and minimised risks.",
+      "icon": "shield-check",
+      "color": "#ef4444"
+    },
+    {
+      "title": "Learning & Development",
+      "description": "Employee growth and organizational capability through structured training initiatives.",
+      "icon": "book-open",
+      "color": "#06b6d4"
+    },
+    {
+      "title": "Employee Relations & Workplace Support",
+      "description": "Foster a positive and productive work environment through proactive employee relations.",
+      "icon": "users",
+      "color": "#6366f1"
+    }
+  ],
+  "contact": {
+    "title": "Get In Touch",
+    "subtitle": "Ready to find the perfect talent? Contact us today.",
+    "email": "aaideologya@gmail.com",
+    "phone": "+91-98708 94088",
+    "address": "Your Office Address, City, India",
+    "visible": true,
+    "tag": "CONTACT US"
+  },
+  "footer": {
+    "companyName": "Aaideology",
+    "tagline": "The Perfect Source",
+    "copyright": "\u00a9 2026 Aaideology. All rights reserved."
+  }
+}
