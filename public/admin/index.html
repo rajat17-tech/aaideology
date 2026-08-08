@@ -1394,19 +1394,23 @@
           </div>`;
 
         const industryRow = (i = {}) => `
-          <div class="card-item-form">
-            <button type="button" class="remove-card" onclick="this.closest('.card-item-form').remove()"><i class="fas fa-times"></i></button>
-            <div class="form-row">
-              <div class="form-group" style="margin-bottom:0;">
-                <label>Title</label>
-                <input type="text" class="form-control industry-title" value="${i.title || ''}">
-              </div>
-              <div class="form-group" style="margin-bottom:0;">
-                <label>Icon key</label>
-                <input type="text" class="form-control industry-icon" placeholder="office-building" value="${i.icon || ''}">
-              </div>
-            </div>
-          </div>`;
+  <div class="card-item-form">
+    <button type="button" class="remove-card" onclick="this.closest('.card-item-form').remove()"><i class="fas fa-times"></i></button>
+    <div class="form-row">
+      <div class="form-group" style="margin-bottom:0;">
+        <label>Title</label>
+        <input type="text" class="form-control industry-title" value="${i.title || ''}">
+      </div>
+      <div class="form-group" style="margin-bottom:0;">
+        <label>Icon key</label>
+        <input type="text" class="form-control industry-icon" placeholder="office-building" value="${i.icon || ''}">
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom:0; margin-top:10px;">
+      <label>Roles (one per line — shown in the "+" accordion on the site)</label>
+      <textarea class="form-control industry-roles" rows="3" placeholder="e.g.&#10;Full Stack Developer&#10;DevOps Engineer">${escapeHtml((i.roles || []).join('\n'))}</textarea>
+    </div>
+  </div>`;
 
         return `
           <div class="card">
@@ -2510,16 +2514,19 @@
       });
 
       const industriesItems = [];
-      document.querySelectorAll('#industriesContainer .card-item-form').forEach(el => {
-        const title = el.querySelector('.industry-title').value.trim();
-        if (title) {
-          industriesItems.push({
-            title,
-            icon: el.querySelector('.industry-icon').value.trim()
-          });
-        }
-      });
-      const industries = {
+document.querySelectorAll('#industriesContainer .card-item-form').forEach(el => {
+  const title = el.querySelector('.industry-title').value.trim();
+  if (title) {
+    const rolesRaw = el.querySelector('.industry-roles')?.value || '';
+    const roles = rolesRaw.split('\n').map(r => r.trim()).filter(Boolean);
+    industriesItems.push({
+      title,
+      icon: el.querySelector('.industry-icon').value.trim(),
+      roles
+    });
+  }
+});
+    const industries = {
         visible: document.getElementById('industriesVisible').checked,
         tag: document.getElementById('industriesTagInput').value,
         title: document.getElementById('industriesTitleInput').value,
