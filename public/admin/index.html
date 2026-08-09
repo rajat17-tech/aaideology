@@ -1664,7 +1664,8 @@
 
     function showPage(pageName) {
       document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-      event.currentTarget.classList.add('active');
+      const navItem = Array.from(document.querySelectorAll('.nav-item')).find(el => el.getAttribute('onclick')?.includes(`'${pageName}'`));
+      if (navItem) navItem.classList.add('active');
       document.getElementById('pageTitle').textContent = pageName.charAt(0).toUpperCase() + pageName.slice(1);
       document.getElementById('contentArea').innerHTML = pages[pageName] ? pages[pageName]() : '<p>Page not found</p>';
     }
@@ -2453,76 +2454,76 @@
     // ===================== SITE CONTENT =====================
     async function saveSiteContent() {
       const hero = {
-        headline: document.getElementById('heroTitle').value,
-        subheadline: document.getElementById('heroSubtitle').value,
-        ctaText: document.getElementById('heroButton').value,
-        ctaLink: document.getElementById('heroLink').value,
-        visible: document.getElementById('heroVisible').checked
+        headline: document.getElementById('heroTitle')?.value || '',
+        subheadline: document.getElementById('heroSubtitle')?.value || '',
+        ctaText: document.getElementById('heroButton')?.value || '',
+        ctaLink: document.getElementById('heroLink')?.value || '',
+        visible: document.getElementById('heroVisible')?.checked !== false
       };
 
       const statsItems = [];
       document.querySelectorAll('#statsContainer .card-item-form').forEach(el => {
         statsItems.push({
-          icon: el.querySelector('.stat-icon').value.trim(),
-          number: parseInt(el.querySelector('.stat-number').value) || 0,
-          suffix: el.querySelector('.stat-suffix').value.trim(),
-          label: el.querySelector('.stat-label').value.trim()
+          icon: el.querySelector('.stat-icon')?.value.trim() || '',
+          number: parseInt(el.querySelector('.stat-number')?.value) || 0,
+          suffix: el.querySelector('.stat-suffix')?.value.trim() || '',
+          label: el.querySelector('.stat-label')?.value.trim() || ''
         });
       });
-      const stats = { visible: document.getElementById('statsVisible').checked, items: statsItems };
+      const stats = { visible: document.getElementById('statsVisible')?.checked !== false, items: statsItems };
 
       const about = {
-        tag: document.getElementById('aboutTagInput').value,
-        title: document.getElementById('aboutTitleInput').value,
-        description: document.getElementById('aboutDescInput').value,
-        companyBackground: document.getElementById('aboutBackgroundInput').value,
-        mission: document.getElementById('aboutMissionInput').value,
-        image: document.getElementById('aboutImageInput').value,
-        visible: document.getElementById('aboutVisible').checked
+        tag: document.getElementById('aboutTagInput')?.value || '',
+        title: document.getElementById('aboutTitleInput')?.value || '',
+        description: document.getElementById('aboutDescInput')?.value || '',
+        companyBackground: document.getElementById('aboutBackgroundInput')?.value || '',
+        mission: document.getElementById('aboutMissionInput')?.value || '',
+        image: document.getElementById('aboutImageInput')?.value || '',
+        visible: document.getElementById('aboutVisible')?.checked !== false
       };
 
       const valuesItems = [];
       document.querySelectorAll('#valuesContainer .card-item-form').forEach(el => {
-        const title = el.querySelector('.value-title').value.trim();
+        const title = el.querySelector('.value-title')?.value.trim();
         if (title) {
           valuesItems.push({
             title,
-            icon: el.querySelector('.value-icon').value.trim(),
-            color: el.querySelector('.value-color').value.trim() || '#3b82f6',
-            description: el.querySelector('.value-desc').value.trim()
+            icon: el.querySelector('.value-icon')?.value.trim() || '',
+            color: el.querySelector('.value-color')?.value.trim() || '#3b82f6',
+            description: el.querySelector('.value-desc')?.value.trim() || ''
           });
         }
       });
       const values = {
-        visible: document.getElementById('valuesVisible').checked,
-        tag: document.getElementById('valuesTagInput').value,
-        title: document.getElementById('valuesTitleInput').value,
+        visible: document.getElementById('valuesVisible')?.checked !== false,
+        tag: document.getElementById('valuesTagInput')?.value || '',
+        title: document.getElementById('valuesTitleInput')?.value || '',
         items: valuesItems
       };
 
       const services = {
-        tag: document.getElementById('servicesTagInput').value,
-        title: document.getElementById('servicesTitleInput').value,
-        subtitle: document.getElementById('servicesSubtitleInput').value,
-        visible: document.getElementById('servicesVisible').checked
+        tag: document.getElementById('servicesTagInput')?.value || '',
+        title: document.getElementById('servicesTitleInput')?.value || '',
+        subtitle: document.getElementById('servicesSubtitleInput')?.value || '',
+        visible: document.getElementById('servicesVisible')?.checked !== false
       };
 
       const serviceList = [];
       document.querySelectorAll('#servicesContainer .card-item-form').forEach(el => {
-        const title = el.querySelector('.service-title').value.trim();
+        const title = el.querySelector('.service-title')?.value.trim();
         if (title) {
           serviceList.push({
             title,
-            icon: el.querySelector('.service-icon').value.trim(),
-            color: el.querySelector('.service-color').value.trim() || '#3b82f6',
-            description: el.querySelector('.service-desc').value.trim()
+            icon: el.querySelector('.service-icon')?.value.trim() || '',
+            color: el.querySelector('.service-color')?.value.trim() || '#3b82f6',
+            description: el.querySelector('.service-desc')?.value.trim() || ''
           });
         }
       });
 
       const industriesItems = [];
       document.querySelectorAll('#industriesContainer .card-item-form').forEach(el => {
-        const title = el.querySelector('.industry-title').value.trim();
+        const title = el.querySelector('.industry-title')?.value.trim();
         if (title) {
           const rolesRaw = el.querySelector('.industry-roles-input')?.value || '';
           const roles = rolesRaw
@@ -2531,33 +2532,33 @@
             .filter(r => r.length > 0);
           industriesItems.push({
             title,
-            icon: el.querySelector('.industry-icon').value.trim(),
+            icon: el.querySelector('.industry-icon')?.value.trim() || '',
             roles
           });
         }
       });
       const industries = {
-        visible: document.getElementById('industriesVisible').checked,
-        tag: document.getElementById('industriesTagInput').value,
-        title: document.getElementById('industriesTitleInput').value,
-        subtitle: document.getElementById('industriesSubtitleInput').value,
+        visible: document.getElementById('industriesVisible')?.checked !== false,
+        tag: document.getElementById('industriesTagInput')?.value || '',
+        title: document.getElementById('industriesTitleInput')?.value || '',
+        subtitle: document.getElementById('industriesSubtitleInput')?.value || '',
         items: industriesItems
       };
 
       const contact = {
-        tag: document.getElementById('contactTagInput').value,
-        title: document.getElementById('contactTitleInput').value,
-        subtitle: document.getElementById('contactSubtitleInput').value,
-        email: document.getElementById('contactEmailInput').value,
-        phone: document.getElementById('contactPhoneInput').value,
-        address: document.getElementById('contactAddressInput').value,
-        visible: document.getElementById('contactVisible').checked
+        tag: document.getElementById('contactTagInput')?.value || '',
+        title: document.getElementById('contactTitleInput')?.value || '',
+        subtitle: document.getElementById('contactSubtitleInput')?.value || '',
+        email: document.getElementById('contactEmailInput')?.value || '',
+        phone: document.getElementById('contactPhoneInput')?.value || '',
+        address: document.getElementById('contactAddressInput')?.value || '',
+        visible: document.getElementById('contactVisible')?.checked !== false
       };
 
       const footer = {
-        companyName: document.getElementById('footerCompanyInput').value,
-        tagline: document.getElementById('footerTaglineInput').value,
-        copyright: document.getElementById('footerCopyrightInput').value
+        companyName: document.getElementById('footerCompanyInput')?.value || '',
+        tagline: document.getElementById('footerTaglineInput')?.value || '',
+        copyright: document.getElementById('footerCopyrightInput')?.value || ''
       };
 
       const data = { hero, stats, about, values, services, serviceList, industries, contact, footer };
@@ -2566,6 +2567,7 @@
         await API.updateSiteContent(data);
         showToast('Site content saved!');
         await loadData();
+        showPage('content');
       } catch (err) {
         showToast('Error: ' + err.message, 'error');
       }
