@@ -20,7 +20,7 @@ router.post('/', async (req, res) => {
     return res.status(400).json({ error: 'One of the fields is too long.' });
   }
 
-  const to = getDestinationEmail();
+  const to = await getDestinationEmail();
   if (!to) {
     console.error('Hire form: no destination email configured (set Contact email in admin panel or EMAIL_TO in .env)');
     return res.status(500).json({ error: 'This form is not fully configured yet. Please try contacting us another way.' });

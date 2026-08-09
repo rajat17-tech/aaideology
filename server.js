@@ -179,11 +179,31 @@ const PORT = process.env.PORT || 3000;
   await connectDB();
   await seedFromJson();
 
-  app.listen(PORT, () => {
+  const server = app.listen(PORT, () => {
     console.log('========================================');
     console.log(`🌐 Main Site:  http://localhost:${PORT}`);
     console.log(`🔐 Admin Panel: http://localhost:${PORT}/admin`);
     console.log(isProduction ? '🔒 Running in production mode' : '⚠️  Running in development mode (set NODE_ENV=production when deploying)');
     console.log('========================================');
   });
+
+  // Graceful shutdown handling for Render / Docker deployments
+  const shutdown = async (signal) => {
+    console.log(`\n⚠️  Received ${signal}. Shutting down gracefully...`);
+    server.close(async () => {
+      console.log('  🔒 HTTP server closed');
+      try {
+        const mongoose = require('mongoose');
+        await mongoose.connection.close();
+        console.log('  🔌 MongoDB connection closed');
+      } catch (e) {
+        console.error('  Error closing MongoDB connection:', e);
+      }
+      process.exit(0);
+    });
+  };
+
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('SIGINT', () => shutdown('SIGINT'));
 })();
+

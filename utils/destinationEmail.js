@@ -1,17 +1,13 @@
-const fs = require('fs');
-const path = require('path');
-
-const contentFile = path.join(__dirname, '..', 'data', 'content.json');
+const SiteContent = require('../models/SiteContent');
 
 // The email that contact/apply/hire form notifications get sent to.
 // Priority: the "Email" field on the admin panel's Content > Contact tab
-// (data/content.json -> contact.email), falling back to EMAIL_TO in .env
-// if that field is empty. This is the "email I've selected" from the
-// admin panel that client/candidate messages should land in.
-function getDestinationEmail() {
+// (stored in MongoDB SiteContent -> contact.email), falling back to EMAIL_TO
+// in .env if that field is empty.
+async function getDestinationEmail() {
   try {
-    const data = JSON.parse(fs.readFileSync(contentFile, 'utf8'));
-    const adminSetEmail = data.contact && data.contact.email && data.contact.email.trim();
+    const doc = await SiteContent.findById('site-content').lean();
+    const adminSetEmail = doc && doc.contact && doc.contact.email && doc.contact.email.trim();
     return adminSetEmail || process.env.EMAIL_TO || null;
   } catch (err) {
     return process.env.EMAIL_TO || null;
@@ -19,3 +15,4 @@ function getDestinationEmail() {
 }
 
 module.exports = { getDestinationEmail };
+
