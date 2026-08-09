@@ -45,6 +45,37 @@ async function seedFromJson() {
       console.log('  📄 Seeded SiteContent from content.json');
       seeded = true;
     }
+  } else {
+    // Self-healing: if SiteContent exists in MongoDB but any industry items lost their roles array
+    // (e.g. from a past admin save prior to fixing the admin form), restore roles from content.json.
+    const doc = await SiteContent.findById('site-content');
+    if (doc && doc.industries && Array.isArray(doc.industries.items)) {
+      const contentJson = readLocalJson('content.json');
+      if (contentJson && contentJson.industries && Array.isArray(contentJson.industries.items)) {
+        let updated = false;
+        const defaultMap = new Map();
+        contentJson.industries.items.forEach(item => {
+          if (item.title && item.roles && item.roles.length > 0) {
+            defaultMap.set(item.title.toLowerCase().trim(), item.roles);
+          }
+        });
+        doc.industries.items.forEach(item => {
+          if ((!item.roles || !Array.isArray(item.roles) || item.roles.length === 0) && item.title) {
+            const defaultRoles = defaultMap.get(item.title.toLowerCase().trim());
+            if (defaultRoles) {
+              item.roles = defaultRoles;
+              updated = true;
+            }
+          }
+        });
+        if (updated) {
+          doc.markModified('industries');
+          await doc.save();
+          console.log('  📄 Restored missing industry roles in SiteContent from content.json');
+          seeded = true;
+        }
+      }
+    }
   }
 
   // ── Jobs ─────────────────────────────────────────────────────────

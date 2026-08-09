@@ -194,7 +194,10 @@ function getIconSvg(name, color) {
 
 // ==================== INDUSTRIES ACCORDION ====================
 function toggleIndustryCard(idx) {
-  const card = document.getElementById(`industryRoles${idx}`).closest('.industry-card');
+  const rolesEl = document.getElementById(`industryRoles${idx}`);
+  if (!rolesEl) return;
+  const card = rolesEl.closest('.industry-card');
+  if (!card) return;
   const isOpen = card.classList.contains('is-open');
   // Close any other open cards (accordion-style, one at a time)
   document.querySelectorAll('.industry-card.is-open').forEach(c => {
@@ -292,7 +295,9 @@ async function loadContent() {
       const industriesGrid = document.getElementById('industriesGrid');
       if (industriesGrid && data.industries.items && data.industries.items.length) {
         industriesGrid.innerHTML = data.industries.items.map((i, idx) => {
-          const roles = i.roles || [];
+          const roles = Array.isArray(i.roles)
+            ? i.roles.filter(Boolean)
+            : (typeof i.roles === 'string' ? i.roles.split('\n').map(r => r.trim()).filter(Boolean) : []);
           const hasRoles = roles.length > 0;
           return `
           <div class="industry-card${hasRoles ? ' is-expandable' : ''}" ${hasRoles ? `onclick="toggleIndustryCard(${idx})"` : ''}>

@@ -1393,20 +1393,27 @@
             </div>
           </div>`;
 
-        const industryRow = (i = {}) => `
+        const industryRow = (i = {}) => {
+          const rolesText = Array.isArray(i.roles) ? i.roles.join('\n') : (typeof i.roles === 'string' ? i.roles : '');
+          return `
           <div class="card-item-form">
             <button type="button" class="remove-card" onclick="this.closest('.card-item-form').remove()"><i class="fas fa-times"></i></button>
             <div class="form-row">
-              <div class="form-group" style="margin-bottom:0;">
+              <div class="form-group" style="margin-bottom:10px;">
                 <label>Title</label>
-                <input type="text" class="form-control industry-title" value="${i.title || ''}">
+                <input type="text" class="form-control industry-title" value="${escapeHtml(i.title || '')}">
               </div>
-              <div class="form-group" style="margin-bottom:0;">
+              <div class="form-group" style="margin-bottom:10px;">
                 <label>Icon key</label>
-                <input type="text" class="form-control industry-icon" placeholder="office-building" value="${i.icon || ''}">
+                <input type="text" class="form-control industry-icon" placeholder="office-building" value="${escapeHtml(i.icon || '')}">
               </div>
             </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label>Roles / Domains (one per line)</label>
+              <textarea class="form-control industry-roles-input" rows="3" placeholder="Full Stack Developer&#10;Data Engineer&#10;QA Engineer">${escapeHtml(rolesText)}</textarea>
+            </div>
           </div>`;
+        };
 
         return `
           <div class="card">
@@ -2427,14 +2434,18 @@
         <div class="card-item-form">
           <button type="button" class="remove-card" onclick="this.closest('.card-item-form').remove()"><i class="fas fa-times"></i></button>
           <div class="form-row">
-            <div class="form-group" style="margin-bottom:0;">
+            <div class="form-group" style="margin-bottom:10px;">
               <label>Title</label>
               <input type="text" class="form-control industry-title">
             </div>
-            <div class="form-group" style="margin-bottom:0;">
+            <div class="form-group" style="margin-bottom:10px;">
               <label>Icon key</label>
               <input type="text" class="form-control industry-icon" placeholder="office-building">
             </div>
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Roles / Domains (one per line)</label>
+            <textarea class="form-control industry-roles-input" rows="3" placeholder="Full Stack Developer&#10;Data Engineer&#10;QA Engineer"></textarea>
           </div>
         </div>`;
     }
@@ -2513,9 +2524,15 @@
       document.querySelectorAll('#industriesContainer .card-item-form').forEach(el => {
         const title = el.querySelector('.industry-title').value.trim();
         if (title) {
+          const rolesRaw = el.querySelector('.industry-roles-input')?.value || '';
+          const roles = rolesRaw
+            .split('\n')
+            .map(r => r.trim())
+            .filter(r => r.length > 0);
           industriesItems.push({
             title,
-            icon: el.querySelector('.industry-icon').value.trim()
+            icon: el.querySelector('.industry-icon').value.trim(),
+            roles
           });
         }
       });
