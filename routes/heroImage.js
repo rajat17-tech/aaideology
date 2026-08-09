@@ -5,14 +5,13 @@ const path = require('path');
 const crypto = require('crypto');
 const multer = require('multer');
 const { requireAdmin } = require('../middleware/auth');
-const { readJson, writeJson } = require('../utils/jsonStore');
+const HeroImage = require('../models/HeroImage');
 
 // NOTE: this route was previously a stub (`GET / -> { url: '' }` with no
 // POST/DELETE at all), so uploading a hero background image from the admin
 // panel silently did nothing. It's now implemented the same way
 // routes/posters.js handles image uploads.
 
-const HERO_FILE = 'data/heroImage.json';
 const UPLOAD_DIR = path.join(__dirname, '..', 'uploads', 'hero');
 fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 
@@ -22,15 +21,6 @@ const ALLOWED_IMAGE_TYPES = {
   'image/gif': ['.gif'],
   'image/webp': ['.webp']
 };
-
-const getHero = () => {
-  try {
-    return readJson(HERO_FILE);
-  } catch (err) {
-    return { url: null };
-  }
-};
-const saveHero = (hero) => writeJson(HERO_FILE, hero);
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, UPLOAD_DIR),
@@ -52,39 +42,63 @@ const upload = multer({
 });
 
 // GET current hero background image — public (the homepage needs this)
-router.get('/', (req, res) => {
-  const hero = getHero();
-  res.json({ exists: !!hero.url, url: hero.url || '' });
+router.get('/', async (req, res) => {
+  try {
+    const doc = await HeroImage.findById('hero-image').lean();
+    const url = doc ? doc.url : null;
+    res.json({ exists: !!url, url: url || '' });
+  } catch (err) {
+    console.error('HeroImage route error:', err);
+    res.status(500).json({ error: 'Something went wrong. Please try again.' });
+  }
 });
 
 // UPLOAD/replace the hero background image — admin only
 router.post('/', requireAdmin, (req, res) => {
-  upload.single('heroImage')(req, res, (err) => {
+  upload.single('heroImage')(req, res, async (err) => {
     if (err) return res.status(400).json({ error: err.message });
     if (!req.file) return res.status(400).json({ error: 'No image file provided' });
 
-    // Remove the previous hero image file (if any) before saving the new one
-    const previous = getHero();
-    if (previous.url) {
-      const prevPath = path.resolve(UPLOAD_DIR, path.basename(previous.url));
-      if (prevPath.startsWith(UPLOAD_DIR + path.sep)) fs.unlink(prevPath, () => {});
-    }
+    try {
+      // Remove the previous hero image file (if any) before saving the new one
+      const previous = await HeroImage.findById('hero-image').lean();
+      if (previous && previous.url) {
+        const prevPath = path.resolve(UPLOAD_DIR, path.basename(previous.url));
+        if (prevPath.startsWith(UPLOAD_DIR + path.sep)) fs.unlink(prevPath, () => {});
+      }
 
-    const url = `/uploads/hero/${req.file.filename}`;
-    saveHero({ url });
-    res.status(201).json({ url });
+      const url = `/uploads/hero/${req.file.filename}`;
+      await HeroImage.findOneAndUpdate(
+        { _id: 'hero-image' },
+        { url },
+        { upsert: true }
+      );
+      res.status(201).json({ url });
+    } catch (dbErr) {
+      console.error('HeroImage route error:', dbErr);
+      res.status(500).json({ error: 'Something went wrong. Please try again.' });
+    }
   });
 });
 
 // REMOVE the hero background image — admin only
-router.delete('/', requireAdmin, (req, res) => {
-  const hero = getHero();
-  if (hero.url) {
-    const filePath = path.resolve(UPLOAD_DIR, path.basename(hero.url));
-    if (filePath.startsWith(UPLOAD_DIR + path.sep)) fs.unlink(filePath, () => {});
+router.delete('/', requireAdmin, async (req, res) => {
+  try {
+    const doc = await HeroImage.findById('hero-image').lean();
+    if (doc && doc.url) {
+      const filePath = path.resolve(UPLOAD_DIR, path.basename(doc.url));
+      if (filePath.startsWith(UPLOAD_DIR + path.sep)) fs.unlink(filePath, () => {});
+    }
+    await HeroImage.findOneAndUpdate(
+      { _id: 'hero-image' },
+      { url: null },
+      { upsert: true }
+    );
+    res.json({ message: 'Hero image removed' });
+  } catch (err) {
+    console.error('HeroImage route error:', err);
+    res.status(500).json({ error: 'Something went wrong. Please try again.' });
   }
-  saveHero({ url: null });
-  res.json({ message: 'Hero image removed' });
 });
 
 module.exports = router;

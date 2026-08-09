@@ -1,35 +1,33 @@
 const express = require('express');
 const router = express.Router();
-const fs = require('fs');
-const path = require('path');
 const { requireAdmin } = require('../middleware/auth');
-
-const navbarFile = path.join(__dirname, '..', 'data', 'navbar.json');
-
-const readJSON = (file) => JSON.parse(fs.readFileSync(file, 'utf8'));
-const writeJSON = (file, data) => fs.writeFileSync(file, JSON.stringify(data, null, 2));
+const Navbar = require('../models/Navbar');
 
 // GET navbar items — public
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const data = readJSON(navbarFile);
-    res.json(data.items);
+    const doc = await Navbar.findById('navbar').lean();
+    res.json(doc ? doc.items : []);
   } catch (err) {
-    console.error('Failed to read navbar.json:', err);
+    console.error('Failed to read navbar:', err);
     res.status(500).json({ error: 'Failed to load navigation.' });
   }
 });
 
 // UPDATE navbar items — admin only
-router.put('/', requireAdmin, (req, res) => {
+router.put('/', requireAdmin, async (req, res) => {
   if (!Array.isArray(req.body)) {
     return res.status(400).json({ error: 'Expected an array of navbar items.' });
   }
   try {
-    writeJSON(navbarFile, { items: req.body });
+    await Navbar.findOneAndUpdate(
+      { _id: 'navbar' },
+      { items: req.body },
+      { upsert: true }
+    );
     res.json({ message: 'Navbar updated' });
   } catch (err) {
-    console.error('Failed to write navbar.json:', err);
+    console.error('Failed to write navbar:', err);
     res.status(500).json({ error: 'Failed to save navigation.' });
   }
 });

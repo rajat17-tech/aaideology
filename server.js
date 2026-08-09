@@ -2,12 +2,14 @@ const express = require('express');
 const session = require('express-session');
 const dotenv = require('dotenv');
 const path = require('path');
-const fs = require('fs');
 const crypto = require('crypto');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 
 dotenv.config();
+
+const { connectDB } = require('./utils/db');
+const { seedFromJson } = require('./utils/seedFromJson');
 
 // Fail fast if critical secrets are missing/insecure so the app never
 // silently runs with a guessable session secret in production.
@@ -122,26 +124,9 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
   }
 }));
 
-// Ensure data files exist
-const ensureDataFile = (filename, defaultData) => {
-  const filepath = path.join(__dirname, 'data', filename);
-  if (!fs.existsSync(filepath)) {
-    fs.writeFileSync(filepath, JSON.stringify(defaultData, null, 2));
-  }
-};
-
-ensureDataFile('sections.json', { sections: [] });
-ensureDataFile('navbar.json', { items: [
-  { id: 'home', label: 'Home', href: '#home', order: 0 },
-  { id: 'about', label: 'About', href: '#about', order: 1 },
-  { id: 'services', label: 'Services', href: '#services', order: 2 },
-  { id: 'jobs', label: 'Jobs', href: '#jobs', order: 3 },
-  { id: 'contact', label: 'Contact', href: '#contact', order: 4 }
-]});
-ensureDataFile('jobs.json', []);
-ensureDataFile('posters.json', []);
-ensureDataFile('heroImage.json', { url: null });
-ensureDataFile('reviews.json', []);
+// Data is now stored in MongoDB — no local JSON bootstrapping needed.
+// On first startup the seedFromJson() utility migrates existing
+// data/*.json files into MongoDB (see the startup block below).
 
 // Apply rate limiting to sensitive endpoints before mounting routers
 app.use('/api/auth/login', loginLimiter);
@@ -187,12 +172,18 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).json({ error: 'Something went wrong. Please try again later.' });
 });
 
-// Start server
+// Start server — connect to MongoDB first, then seed, then listen.
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log('========================================');
-  console.log(`🌐 Main Site:  http://localhost:${PORT}`);
-  console.log(`🔐 Admin Panel: http://localhost:${PORT}/admin`);
-  console.log(isProduction ? '🔒 Running in production mode' : '⚠️  Running in development mode (set NODE_ENV=production when deploying)');
-  console.log('========================================');
-});
+
+(async () => {
+  await connectDB();
+  await seedFromJson();
+
+  app.listen(PORT, () => {
+    console.log('========================================');
+    console.log(`🌐 Main Site:  http://localhost:${PORT}`);
+    console.log(`🔐 Admin Panel: http://localhost:${PORT}/admin`);
+    console.log(isProduction ? '🔒 Running in production mode' : '⚠️  Running in development mode (set NODE_ENV=production when deploying)');
+    console.log('========================================');
+  });
+})();

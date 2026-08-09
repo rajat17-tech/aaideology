@@ -1,16 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const fs = require('fs');
-const path = require('path');
 const { requireAdmin } = require('../middleware/auth');
-
-const dataDir = path.join(__dirname, '..', 'data');
-const sectionsFile = path.join(dataDir, 'sections.json');
-const navbarFile = path.join(dataDir, 'navbar.json');
-
-// Helper: read/write JSON
-const readJSON = (file) => JSON.parse(fs.readFileSync(file, 'utf8'));
-const writeJSON = (file, data) => fs.writeFileSync(file, JSON.stringify(data, null, 2));
+const Section = require('../models/Section');
+const Navbar = require('../models/Navbar');
 
 // Section IDs are used verbatim inside the admin panel's inline HTML event
 // handlers (onclick="editSection('...')" etc.) and as URL/anchor fragments,
@@ -20,11 +12,18 @@ const writeJSON = (file, data) => fs.writeFileSync(file, JSON.stringify(data, nu
 const SAFE_ID = /^[a-zA-Z0-9_-]{1,80}$/;
 const sanitizeId = (id) => (typeof id === 'string' && SAFE_ID.test(id)) ? id : null;
 
+// Helper: get or create the singleton navbar document
+async function getNavbar() {
+  let nav = await Navbar.findById('navbar');
+  if (!nav) nav = await Navbar.create({ _id: 'navbar', items: [] });
+  return nav;
+}
+
 // GET all sections
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const data = readJSON(sectionsFile);
-    res.json(data.sections);
+    const sections = await Section.find().sort({ order: 1 });
+    res.json(sections);
   } catch (err) {
     console.error('Sections route error:', err);
     res.status(500).json({ error: 'Something went wrong. Please try again.' });
@@ -32,10 +31,9 @@ router.get('/', (req, res) => {
 });
 
 // GET single section
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
-    const data = readJSON(sectionsFile);
-    const section = data.sections.find(s => s.id === req.params.id);
+    const section = await Section.findOne({ sectionId: req.params.id });
     if (!section) return res.status(404).json({ error: 'Section not found' });
     res.json(section);
   } catch (err) {
@@ -47,24 +45,22 @@ router.get('/:id', (req, res) => {
 // CREATE new section + auto-add to navbar
 // New sections default to the TOP of the page (order 0), pushing existing
 // sections down, unless the caller explicitly passes an `order`.
-router.post('/', requireAdmin, (req, res) => {
+router.post('/', requireAdmin, async (req, res) => {
   try {
-    const data = readJSON(sectionsFile);
-    const navbarData = readJSON(navbarFile);
-
     const placeAtTop = req.body.order === undefined;
 
     if (placeAtTop) {
       // Shift every existing section down by 1 to make room at the top
-      data.sections.forEach(s => { s.order = (s.order || 0) + 1; });
+      await Section.updateMany({}, { $inc: { order: 1 } });
     }
 
-    const newSection = {
-      id: sanitizeId(req.body.id) || 'section-' + Date.now(),
+    const sectionId = sanitizeId(req.body.id) || 'section-' + Date.now();
+    const section = await Section.create({
+      sectionId,
       title: req.body.title || 'New Section',
       subtitle: req.body.subtitle || '',
       content: req.body.content || '',
-      type: req.body.type || 'text', // text, image, cards, stats, team, testimonials, custom
+      type: req.body.type || 'text',
       bgColor: req.body.bgColor || '#ffffff',
       textColor: req.body.textColor || '#333333',
       padding: req.body.padding || '60px',
@@ -73,32 +69,27 @@ router.post('/', requireAdmin, (req, res) => {
       navLabel: req.body.navLabel || req.body.title || 'New Section',
       showInNav: req.body.showInNav !== undefined ? req.body.showInNav : true,
       imageUrl: req.body.imageUrl || '',
-      cards: req.body.cards || [],
-      createdAt: new Date().toISOString()
-    };
+      cards: req.body.cards || []
+    });
 
-    data.sections.push(newSection);
-    data.sections.sort((a, b) => a.order - b.order);
-    writeJSON(sectionsFile, data);
-
-    // Auto-add to navbar if showInNav is true (nav order stays append-at-end
-    // so the top nav bar itself doesn't reshuffle every time a section is added)
-    if (newSection.showInNav) {
-      const existingNav = navbarData.items.find(n => n.id === newSection.id);
-      if (!existingNav) {
-        const maxNavOrder = navbarData.items.reduce((max, n) => Math.max(max, n.order || 0), -1);
-        navbarData.items.push({
-          id: newSection.id,
-          label: newSection.navLabel,
-          href: '#' + newSection.id,
-          order: maxNavOrder + 1
+    // Auto-add to navbar if showInNav is true
+    if (section.showInNav) {
+      const nav = await getNavbar();
+      const exists = nav.items.find(n => n.id === sectionId);
+      if (!exists) {
+        const maxOrder = nav.items.reduce((max, n) => Math.max(max, n.order || 0), -1);
+        nav.items.push({
+          id: sectionId,
+          label: section.navLabel,
+          href: '#' + sectionId,
+          order: maxOrder + 1
         });
-        navbarData.items.sort((a, b) => a.order - b.order);
-        writeJSON(navbarFile, navbarData);
+        nav.items.sort((a, b) => a.order - b.order);
+        await nav.save();
       }
     }
 
-    res.status(201).json(newSection);
+    res.status(201).json(section);
   } catch (err) {
     console.error('Sections route error:', err);
     res.status(500).json({ error: 'Something went wrong. Please try again.' });
@@ -106,47 +97,49 @@ router.post('/', requireAdmin, (req, res) => {
 });
 
 // UPDATE section + sync navbar
-router.put('/:id', requireAdmin, (req, res) => {
+router.put('/:id', requireAdmin, async (req, res) => {
   try {
-    const data = readJSON(sectionsFile);
-    const navbarData = readJSON(navbarFile);
-    const index = data.sections.findIndex(s => s.id === req.params.id);
-
-    if (index === -1) return res.status(404).json({ error: 'Section not found' });
+    const section = await Section.findOne({ sectionId: req.params.id });
+    if (!section) return res.status(404).json({ error: 'Section not found' });
 
     // id is immutable on update — otherwise a PUT could rename a section to
-    // an unsafe id (see sanitizeId above) or silently orphan it from the
-    // navbar entry that references the original id.
-    const updatedSection = { ...data.sections[index], ...req.body, id: data.sections[index].id, updatedAt: new Date().toISOString() };
-    data.sections[index] = updatedSection;
-    data.sections.sort((a, b) => a.order - b.order);
-    writeJSON(sectionsFile, data);
+    // an unsafe id or silently orphan it from the navbar entry.
+    const fieldsToUpdate = ['title', 'subtitle', 'content', 'type', 'bgColor',
+      'textColor', 'padding', 'order', 'visible', 'navLabel', 'showInNav',
+      'imageUrl', 'cards'];
+    fieldsToUpdate.forEach(f => {
+      if (req.body[f] !== undefined) section[f] = req.body[f];
+    });
+
+    await section.save();
 
     // Sync navbar
-    const navIndex = navbarData.items.findIndex(n => n.id === req.params.id);
+    const nav = await getNavbar();
+    const navIndex = nav.items.findIndex(n => n.id === req.params.id);
 
-    if (updatedSection.showInNav) {
+    if (section.showInNav) {
       const navItem = {
-        id: updatedSection.id,
-        label: updatedSection.navLabel || updatedSection.title,
-        href: '#' + updatedSection.id,
-        order: updatedSection.order
+        id: section.sectionId,
+        label: section.navLabel || section.title,
+        href: '#' + section.sectionId,
+        order: section.order
       };
       if (navIndex !== -1) {
-        navbarData.items[navIndex] = navItem;
+        nav.items[navIndex] = navItem;
       } else {
-        navbarData.items.push(navItem);
+        nav.items.push(navItem);
       }
     } else {
       if (navIndex !== -1) {
-        navbarData.items.splice(navIndex, 1);
+        nav.items.splice(navIndex, 1);
       }
     }
 
-    navbarData.items.sort((a, b) => a.order - b.order);
-    writeJSON(navbarFile, navbarData);
+    nav.items.sort((a, b) => a.order - b.order);
+    nav.markModified('items');
+    await nav.save();
 
-    res.json(updatedSection);
+    res.json(section);
   } catch (err) {
     console.error('Sections route error:', err);
     res.status(500).json({ error: 'Something went wrong. Please try again.' });
@@ -154,22 +147,18 @@ router.put('/:id', requireAdmin, (req, res) => {
 });
 
 // DELETE section + remove from navbar
-router.delete('/:id', requireAdmin, (req, res) => {
+router.delete('/:id', requireAdmin, async (req, res) => {
   try {
-    const data = readJSON(sectionsFile);
-    const navbarData = readJSON(navbarFile);
-
-    const index = data.sections.findIndex(s => s.id === req.params.id);
-    if (index === -1) return res.status(404).json({ error: 'Section not found' });
-
-    data.sections.splice(index, 1);
-    writeJSON(sectionsFile, data);
+    const result = await Section.findOneAndDelete({ sectionId: req.params.id });
+    if (!result) return res.status(404).json({ error: 'Section not found' });
 
     // Remove from navbar
-    const navIndex = navbarData.items.findIndex(n => n.id === req.params.id);
+    const nav = await getNavbar();
+    const navIndex = nav.items.findIndex(n => n.id === req.params.id);
     if (navIndex !== -1) {
-      navbarData.items.splice(navIndex, 1);
-      writeJSON(navbarFile, navbarData);
+      nav.items.splice(navIndex, 1);
+      nav.markModified('items');
+      await nav.save();
     }
 
     res.json({ message: 'Section deleted successfully' });
@@ -180,31 +169,32 @@ router.delete('/:id', requireAdmin, (req, res) => {
 });
 
 // REORDER sections
-router.post('/reorder', requireAdmin, (req, res) => {
+router.post('/reorder', requireAdmin, async (req, res) => {
   try {
     const { orders } = req.body; // { sectionId: newOrder, ... }
-    const data = readJSON(sectionsFile);
-    const navbarData = readJSON(navbarFile);
 
-    data.sections.forEach(section => {
-      if (orders[section.id] !== undefined) {
-        section.order = orders[section.id];
+    // Update sections in bulk
+    const bulkOps = Object.entries(orders).map(([id, order]) => ({
+      updateOne: {
+        filter: { sectionId: id },
+        update: { $set: { order } }
       }
-    });
-
-    data.sections.sort((a, b) => a.order - b.order);
-    writeJSON(sectionsFile, data);
+    }));
+    if (bulkOps.length > 0) await Section.bulkWrite(bulkOps);
 
     // Sync navbar orders
-    navbarData.items.forEach(item => {
+    const nav = await getNavbar();
+    nav.items.forEach(item => {
       if (orders[item.id] !== undefined) {
         item.order = orders[item.id];
       }
     });
-    navbarData.items.sort((a, b) => a.order - b.order);
-    writeJSON(navbarFile, navbarData);
+    nav.items.sort((a, b) => a.order - b.order);
+    nav.markModified('items');
+    await nav.save();
 
-    res.json(data.sections);
+    const sections = await Section.find().sort({ order: 1 });
+    res.json(sections);
   } catch (err) {
     console.error('Sections route error:', err);
     res.status(500).json({ error: 'Something went wrong. Please try again.' });
