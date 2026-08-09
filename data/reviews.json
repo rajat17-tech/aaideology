@@ -1,1 +1,62 @@
-[]
+[
+  {
+    "id": "2dce3341-e8a9-4d66-8ce1-4d37ca11fb68",
+    "name": "Jayanti Kumari",
+    "rating": 5,
+    "text": "The interview process was well-structured and transparent, with clear communication at every stage. The discussions were relevant and gave a good opportunity to showcase both technical and problem-solving skills. Overall, it was a smooth and professional experience.",
+    "type": "candidate",
+    "source": "admin",
+    "approved": true,
+    "createdAt": "2026-08-09T05:02:27.245768Z"
+  },
+  {
+    "id": "f1954015-ba20-40a6-80e6-b898b9df64cc",
+    "name": "Kali Prasad Sahu",
+    "rating": 5,
+    "text": "Great experience! They are efficient, professional, and very responsive. They helped me secure a great position quickly and made the entire process seamless. Huge thanks to the team!",
+    "type": "candidate",
+    "source": "admin",
+    "approved": true,
+    "createdAt": "2026-08-09T05:03:27.245768Z"
+  },
+  {
+    "id": "e44baf44-f647-4796-ab00-4e323b0f9804",
+    "name": "Haseeb Bhat",
+    "rating": 5,
+    "text": "Excellent Experience with Aaideology Team. I would like to sincerely thank the entire Aaideology team for their exceptional support throughout my recruitment journey. From the very beginning until the final stage, the process was handled professionally, smoothly, and with great care. A special thanks to Sakshi, who was my primary point of contact throughout the process. She continuously guided me, kept me updated on every development, answered my questions patiently, and ensured that I was informed at every step. Her dedication, professionalism, and supportive approach made the entire experience seamless and stress free. She was always available whenever I needed assistance and played a key role in making the process successful. I would also like to thank Neha for her support and communication during the process. Whenever she connected with me, she was professional, helpful, and ensured that important information was communicated clearly. What stood out most about Aaideology was their transparency, timely updates, and genuine commitment to candidates. The team maintained excellent communication, provided clear guidance, and made sure that every stage of the process was managed efficiently. Thanks to the efforts of the Aaideology team, I received an opportunity with a very good company, and I am truly grateful for their support and trust throughout the journey. I highly recommend Aaideology to anyone seeking career opportunities and professional recruitment assistance. Thank you once again to Sakshi, Neha, and the entire Aaideology team for making this a wonderful experience. Wishing the team continued success and growth. Highly recommended",
+    "type": "candidate",
+    "source": "admin",
+    "approved": true,
+    "createdAt": "2026-08-09T05:04:27.245768Z"
+  },
+  {
+    "id": "9d253fae-8ed3-48dd-b48c-7abbb05c634f",
+    "name": "Harman Jaat",
+    "rating": 5,
+    "text": "I had an excellent experience with Aaideology. The team is highly professional, supportive, and knowledgeable. They provide clear guidance and genuine help at every step. Their approach is transparent, and they truly care about client success. Highly recommended for anyone looking for reliable consultancy services in Dehradun.",
+    "type": "candidate",
+    "source": "admin",
+    "approved": true,
+    "createdAt": "2026-08-09T05:05:27.245768Z"
+  },
+  {
+    "id": "42515f60-5ef4-499d-8425-4edbee13ef91",
+    "name": "Sheel Chand Groups",
+    "rating": 5,
+    "text": "I’ve had a great experience working with your team. The level of professionalism, transparency, and dedication you bring to your work is truly commendable. I would confidently recommend your services to anyone looking for a reliable and trustworthy partner. Wishing you all the very best for your new website and continued success!",
+    "type": "client",
+    "source": "admin",
+    "approved": true,
+    "createdAt": "2026-08-09T05:06:27.245768Z"
+  },
+  {
+    "id": "188234a2-84dc-47e7-8bd1-55deb63c154a",
+    "name": "Rajat",
+    "rating": 4,
+    "text": "xcvbnm",
+    "type": "candidate",
+    "source": "candidate",
+    "approved": false,
+    "createdAt": "2026-08-09T05:11:40.740Z"
+  }
+]

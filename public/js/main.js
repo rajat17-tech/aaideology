@@ -432,13 +432,18 @@ function renderStars(rating) {
 }
 
 function renderReviewCards(list) {
-  return list.map(r => `
-    <div class="review-card">
+  const LONG_REVIEW_LIMIT = 220;
+  return list.map(r => {
+    const isLong = r.text.length > LONG_REVIEW_LIMIT;
+    return `
+    <div class="review-card${isLong ? ' is-long' : ''}">
       <div class="review-stars">${renderStars(r.rating)}</div>
       <p class="review-text">${escapeHtml(r.text)}</p>
       <div class="review-author">— ${escapeHtml(r.name)}</div>
+      ${isLong ? `<button type="button" class="review-toggle" onclick="const c=this.closest('.review-card'); c.classList.toggle('expanded'); this.textContent = c.classList.contains('expanded') ? 'Read less' : 'Read more';">Read more</button>` : ''}
     </div>
-  `).join('');
+  `;
+  }).join('');
 }
 
 async function loadReviews() {

@@ -1,27 +1,3 @@
 {
-  "sections": [
-    {
-      "id": "testimonials",
-      "title": "What Our Clients Say",
-      "subtitle": "Trusted by businesses across India",
-      "content": "",
-      "type": "testimonials",
-      "bgColor": "#ffffff",
-      "textColor": "#333333",
-      "padding": "60px",
-      "order": 0,
-      "visible": true,
-      "navLabel": "What Our Clients Say",
-      "showInNav": true,
-      "imageUrl": "",
-      "cards": [
-        {
-          "title": "Sheel Chand Groups",
-          "icon": "Client",
-          "description": "I’ve had a great experience working with your team. The level of professionalism, transparency, and dedication you bring to your work is truly commendable. I would confidently recommend your services to anyone looking for a reliable and trustworthy partner. Wishing you all the very best for your new website and continued success!"
-        }
-      ],
-      "createdAt": "2026-08-04T17:26:17.982Z"
-    }
-  ]
+    "sections": []
 }

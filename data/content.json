@@ -9,8 +9,8 @@
   "about": {
     "tag": "ABOUT US",
     "title": "Who We Are",
-    "description": "We are a professional <strong>HR & Recruitment Service Provider</strong> dedicated to helping companies find the right talent, at the right time, at the right cost. We act as your extended hiring team \u2014 without the overhead of a full-time HR department.",
-    "companyBackground": "Founded with a vision to simplify hiring for growing businesses, we started as a recruitment consultancy and have grown into a trusted hiring partner for companies across IT, Manufacturing, Sales, Healthcare, Retail, and more.",
+    "description": "We are a professional <strong>HR & Recruitment Service Provider</strong> dedicated to helping companies find the right talent, at the right time, at the right cost. We act as your extended hiring team \u2014 without the overhead of a full-time HR department.<br><br><strong>An Ideology (Ideal).</strong> As the name suggests, we are the ideal partner for the Employee \u2013 matching you to the perfect company based on your experience, forte, and qualification \u2013 and the Employer \u2013 providing the perfect source to fill every vacancy with the right talent. The perfect solution, delivered.",
+    "companyBackground": "Established in 2019 with a vision to simplify hiring for growing businesses, we started as a recruitment consultancy and have grown into a trusted hiring partner for companies across IT, Manufacturing, Sales, Healthcare, Retail, and more. We act as your extended hiring team \u2013 without the overhead of a full HR department.",
     "mission": "To help companies grow by providing fast, affordable, and high-quality recruitment solutions that save time, reduce hiring risk, and improve workforce quality.",
     "image": "images/about-banner.png",
     "visible": true
@@ -89,7 +89,7 @@
   },
   "industries": {
     "visible": true,
-    "tag": "Where We Work",
+    "tag": "Sectors We Serve",
     "title": "Industries & domains served",
     "subtitle": "We recruit and support hiring across a wide range of fast-moving, high-growth sectors. Click any card to see the roles we hire for.",
     "items": [
@@ -318,9 +318,9 @@
   "contact": {
     "title": "Get In Touch",
     "subtitle": "Ready to find the perfect talent? Contact us today.",
-    "email": "aaideologya@gmail.com",
-    "phone": "+91-98708 94088",
-    "address": "Your Office Address, City, India",
+    "email": "aaideologya@gmail.com, hrmaaideology@gmail.com",
+    "phone": "+91-98708 94088, +91-89236 46742",
+    "address": "HIG FLATS, Bhel Chowk, Karanpur, Dehradun, Uttarakhand 248001",
     "visible": true,
     "tag": "CONTACT US"
   },

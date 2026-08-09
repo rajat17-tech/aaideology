@@ -292,7 +292,7 @@ p{ margin: 0; }
 }
 .hero-eyebrow{
   font-family: var(--mono);
-  font-size: 14px;
+  font-size: 17px;
   letter-spacing: .16em;
   text-transform: uppercase;
   color: var(--primary);
@@ -809,6 +809,28 @@ section{ padding: 120px 0; }
 .review-stars .star-empty{ color: var(--line-strong); }
 .review-text{ font-size: 15px; color: var(--ink); line-height: 1.6; margin-bottom: 16px; }
 .review-author{ font-size: 13px; font-weight: 600; color: var(--ink-soft); }
+.review-card.is-long .review-text{
+  max-height: 96px;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, #000 65%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 65%, transparent 100%);
+}
+.review-card.is-long.expanded .review-text{
+  max-height: none;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+.review-toggle{
+  background: none;
+  border: none;
+  color: var(--primary-2);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  margin: -8px 0 12px;
+  display: block;
+}
 .no-reviews{ color: var(--ink-soft); font-size: 15px; grid-column: 1/-1; text-align: center; padding: 40px 0; }
 
 @media (max-width: 900px){ .reviews-grid{ grid-template-columns: repeat(2,1fr); } }
@@ -922,7 +944,7 @@ section{ padding: 120px 0; }
 }
 .footer-logo{ height: 40px; margin-bottom: 16px; filter: brightness(0) invert(1); }
 .footer-brand h3{ font-family: var(--display); color: var(--white); font-size: 20px; margin-bottom: 4px; }
-.footer-brand p{ font-size: 13px; color: rgba(255,255,255,.5); font-family: var(--mono); letter-spacing: .05em; }
+.footer-brand p{ font-size: 16px; color: rgba(255,255,255,.5); font-family: var(--mono); letter-spacing: .05em; }
 .footer-links h4{
   font-family: var(--mono);
   font-size: 12px;

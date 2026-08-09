@@ -8,24 +8,7 @@ const contentFile = path.join(__dirname, '..', 'data', 'content.json');
 
 const readJSON = (file) => JSON.parse(fs.readFileSync(file, 'utf8'));
 const writeJSON = (file, data) => fs.writeFileSync(file, JSON.stringify(data, null, 2));
-const mergeItemsPreservingExtraFields = (existingItems, incomingItems) => {
-  if (!Array.isArray(incomingItems)) return incomingItems;
-  const existingByTitle = new Map();
-  (Array.isArray(existingItems) ? existingItems : []).forEach(item => {
-    if (item && typeof item.title === 'string') {
-      existingByTitle.set(item.title.trim().toLowerCase(), item);
-    }
-  });
-  return incomingItems.map(incoming => {
-    if (!incoming || typeof incoming !== 'object') return incoming;
-    const match = typeof incoming.title === 'string'
-      ? existingByTitle.get(incoming.title.trim().toLowerCase())
-      : null;
-    return match ? { ...match, ...incoming } : incoming;
-  });
-};
 
-const SECTIONS_WITH_PRESERVED_ITEMS = ['industries', 'values'];
 // GET all site content — public, the website needs this to render every page.
 router.get('/', (req, res) => {
   try {
@@ -49,18 +32,7 @@ router.put('/', requireAdmin, (req, res) => {
   }
   try {
     const data = readJSON(contentFile);
-
-const incoming = { ...req.body };
-for (const key of SECTIONS_WITH_PRESERVED_ITEMS) {
-  if (incoming[key] && Array.isArray(incoming[key].items)) {
-    incoming[key] = {
-      ...incoming[key],
-      items: mergeItemsPreservingExtraFields(data[key]?.items, incoming[key].items)
-    };
-  }
-}
-
-const updated = { ...data, ...incoming };
+    const updated = { ...data, ...req.body };
     writeJSON(contentFile, updated);
     res.json(updated);
   } catch (err) {
