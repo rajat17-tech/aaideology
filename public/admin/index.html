@@ -1089,6 +1089,7 @@
                         <th>Location</th>
                         <th>Salary</th>
                         <th>Experience</th>
+                        <th>Details</th>
                         <th style="text-align:right;">Actions</th>
                       </tr>
                     </thead>
@@ -1100,6 +1101,7 @@
                           <td>${j.location ? escapeHtml(j.location) : '<span style="color:var(--gray-400);">—</span>'}</td>
                           <td>${j.salary ? escapeHtml(j.salary) : '<span style="color:var(--gray-400);">—</span>'}</td>
                           <td>${j.experience ? escapeHtml(j.experience) : '<span style="color:var(--gray-400);">—</span>'}</td>
+                          <td>${(j.description || j.responsibilities || j.requirements) ? '<span style="color:var(--success);"><i class="fas fa-check-circle"></i></span>' : '<span style="color:var(--gray-400);">—</span>'}</td>
                           <td style="text-align:right;">
                             <button class="btn btn-secondary btn-sm" onclick="editJob('${j.id}')" title="Edit"><i class="fas fa-edit"></i></button>
                             <button class="btn btn-danger btn-sm" onclick="deleteJob('${j.id}')" title="Delete" style="margin-left:6px;"><i class="fas fa-trash"></i></button>
@@ -2043,21 +2045,49 @@
             <input type="text" class="form-control" id="jobLocation" value="${job?.location || ''}" placeholder="e.g., Mumbai / Remote">
           </div>
           <div class="form-group">
-            <label>Salary</label>
+            <label>Salary / Package</label>
             <input type="text" class="form-control" id="jobSalary" value="${job?.salary || ''}" placeholder="e.g., ₹6-9 LPA">
           </div>
         </div>
-        <div class="form-group">
-          <label>Experience Required</label>
-          <input type="text" class="form-control" id="jobExperience" value="${job?.experience || ''}" placeholder="e.g., 2-4 years">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Department</label>
+            <input type="text" class="form-control" id="jobDepartment" value="${job?.department || ''}" placeholder="e.g., Engineering, HR, Sales">
+          </div>
+          <div class="form-group">
+            <label>Experience Required</label>
+            <input type="text" class="form-control" id="jobExperience" value="${job?.experience || ''}" placeholder="e.g., 2-4 years">
+          </div>
         </div>
         <div class="form-group">
           <label>Tags (comma-separated)</label>
           <input type="text" class="form-control" id="jobTags" value="${(job?.tags || []).join(', ')}" placeholder="e.g., React, Node.js, Remote">
         </div>
         <div class="form-group">
-          <label>Description</label>
-          <textarea class="form-control" id="jobDescription" rows="5" placeholder="Role responsibilities, requirements, etc.">${job?.description || ''}</textarea>
+          <label>Short Summary <span style="color:var(--gray-400);font-weight:normal;">(shown on job card)</span></label>
+          <textarea class="form-control" id="jobSummary" rows="2" placeholder="Brief one-liner about this role (optional)">${job?.summary || ''}</textarea>
+        </div>
+        <hr style="border:none;border-top:1px solid var(--gray-200);margin:8px 0 16px;">
+        <p style="font-size:13px;color:var(--gray-500);margin-bottom:12px;"><i class="fas fa-info-circle" style="margin-right:4px;"></i> The fields below appear in the public <strong>View Details</strong> section on the website.</p>
+        <div class="form-group">
+          <label>Job Description</label>
+          <textarea class="form-control" id="jobDescription" rows="5" placeholder="Detailed job description — what the role is about, team info, etc.">${job?.description || ''}</textarea>
+        </div>
+        <div class="form-group">
+          <label>Responsibilities</label>
+          <textarea class="form-control" id="jobResponsibilities" rows="4" placeholder="Key responsibilities (one per line)">${job?.responsibilities || ''}</textarea>
+        </div>
+        <div class="form-group">
+          <label>Requirements / Required Skills</label>
+          <textarea class="form-control" id="jobRequirements" rows="4" placeholder="Required skills and qualifications (one per line)">${job?.requirements || ''}</textarea>
+        </div>
+        <div class="form-group">
+          <label>Qualifications</label>
+          <textarea class="form-control" id="jobQualifications" rows="3" placeholder="Educational qualifications (one per line)">${job?.qualifications || ''}</textarea>
+        </div>
+        <div class="form-group">
+          <label>Benefits</label>
+          <textarea class="form-control" id="jobBenefits" rows="3" placeholder="Perks and benefits (one per line)">${job?.benefits || ''}</textarea>
         </div>
       `;
 
@@ -2082,7 +2112,13 @@
         salary: document.getElementById('jobSalary').value.trim(),
         experience: document.getElementById('jobExperience').value.trim(),
         tags: document.getElementById('jobTags').value,
-        description: document.getElementById('jobDescription').value.trim()
+        description: document.getElementById('jobDescription').value.trim(),
+        department: document.getElementById('jobDepartment').value.trim(),
+        summary: document.getElementById('jobSummary').value.trim(),
+        responsibilities: document.getElementById('jobResponsibilities').value.trim(),
+        requirements: document.getElementById('jobRequirements').value.trim(),
+        qualifications: document.getElementById('jobQualifications').value.trim(),
+        benefits: document.getElementById('jobBenefits').value.trim()
       };
 
       try {

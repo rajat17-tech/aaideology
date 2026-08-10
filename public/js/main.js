@@ -350,6 +350,30 @@ async function loadContent() {
       document.getElementById('contactEmail').textContent = data.contact.email;
       document.getElementById('contactPhone').textContent = data.contact.phone;
       document.getElementById('contactAddress').textContent = data.contact.address;
+
+      // Populate footer contact dynamically from the same data
+      const footerContact = document.getElementById('footerContact');
+      if (footerContact) {
+        const emails = (data.contact.email || '').split(',').map(e => e.trim()).filter(Boolean);
+        const phones = (data.contact.phone || '').split(',').map(p => p.trim()).filter(Boolean);
+        let footerHtml = '<h4>Contact</h4>';
+        if (emails.length) {
+          footerHtml += '<div class="footer-contact-label">Email</div><div class="footer-contact-links">';
+          emails.forEach(em => {
+            footerHtml += `<a href="mailto:${escapeHtml(em)}">${escapeHtml(em)}</a>`;
+          });
+          footerHtml += '</div>';
+        }
+        if (phones.length) {
+          footerHtml += '<div class="footer-contact-label">Phone</div><div class="footer-contact-links">';
+          phones.forEach(ph => {
+            const telHref = ph.replace(/[\s()-]/g, '');
+            footerHtml += `<a href="tel:${escapeHtml(telHref)}">${escapeHtml(ph)}</a>`;
+          });
+          footerHtml += '</div>';
+        }
+        footerContact.innerHTML = footerHtml;
+      }
     }
 
     if (data.footer) {
@@ -368,10 +392,13 @@ async function loadContent() {
 }
 
 // ==================== LOAD JOBS ====================
+let cachedJobs = []; // Shared between loadJobs() and openJobDetailModal()
+
 async function loadJobs() {
   try {
     const res = await fetch('/api/jobs');
     const jobs = await res.json();
+    cachedJobs = jobs;
     const grid = document.getElementById('jobsGrid');
 
     if (jobs.length === 0) {
@@ -383,13 +410,18 @@ async function loadJobs() {
       <div class="job-card">
         <h4 class="job-title">${escapeHtml(job.title)}</h4>
         <div class="job-meta">
+          ${job.type ? `<span class="job-type">💼 ${escapeHtml(job.type)}</span>` : ''}
           ${job.salary ? `<span class="job-salary">💰 ${escapeHtml(job.salary)}</span>` : ''}
           ${job.location ? `<span class="job-location">📍 ${escapeHtml(job.location)}</span>` : ''}
         </div>
+        ${job.summary ? `<p class="job-summary">${escapeHtml(job.summary)}</p>` : ''}
         <div class="job-tags">
           ${(job.tags || []).map(t => `<span class="job-tag">${escapeHtml(t)}</span>`).join('')}
         </div>
-        <button class="btn-primary job-apply-btn" style="margin-top: 16px; width: 100%;" data-job-title="${escapeHtml(job.title)}">Apply Now</button>
+        <div class="job-card-buttons">
+          <button class="btn-secondary job-detail-btn" data-job-id="${escapeHtml(String(job._id || job.id))}">View Details</button>
+          <button class="btn-primary job-apply-btn" data-job-title="${escapeHtml(job.title)}">Apply Now</button>
+        </div>
       </div>
     `).join('');
   } catch (err) {
@@ -400,8 +432,11 @@ async function loadJobs() {
 // Delegated click handler avoids ever building an inline onclick="" string
 // out of admin-controlled job titles (attribute-context injection risk).
 document.addEventListener('click', (e) => {
-  const btn = e.target.closest('.job-apply-btn');
-  if (btn) openApplyModal(btn.dataset.jobTitle || '');
+  const applyBtn = e.target.closest('.job-apply-btn');
+  if (applyBtn) return openApplyModal(applyBtn.dataset.jobTitle || '');
+
+  const detailBtn = e.target.closest('.job-detail-btn');
+  if (detailBtn) return openJobDetailModal(detailBtn.dataset.jobId);
 });
 
 // ==================== LOAD POSTERS ====================
@@ -542,6 +577,64 @@ function closeHireModal() {
   document.body.style.overflow = '';
 }
 
+// ==================== JOB DETAIL MODAL ====================
+function textToList(text) {
+  if (!text) return '';
+  const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+  if (lines.length <= 1) return `<p>${escapeHtml(text)}</p>`;
+  return '<ul>' + lines.map(l => `<li>${escapeHtml(l)}</li>`).join('') + '</ul>';
+}
+
+function openJobDetailModal(jobId) {
+  const job = cachedJobs.find(j => String(j._id || j.id) === String(jobId));
+  if (!job) return;
+
+  const metaItems = [
+    job.department ? `<span class="job-detail-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="1"/><line x1="8" y1="6" x2="8" y2="6"/><line x1="16" y1="6" x2="16" y2="6"/></svg>${escapeHtml(job.department)}</span>` : '',
+    job.location ? `<span class="job-detail-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${escapeHtml(job.location)}</span>` : '',
+    job.type ? `<span class="job-detail-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>${escapeHtml(job.type)}</span>` : '',
+    job.experience ? `<span class="job-detail-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${escapeHtml(job.experience)}</span>` : '',
+    job.salary ? `<span class="job-detail-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>${escapeHtml(job.salary)}</span>` : ''
+  ].filter(Boolean).join('');
+
+  const tags = (job.tags || []).length
+    ? `<div class="job-detail-tags">${job.tags.map(t => `<span class="job-tag">${escapeHtml(t)}</span>`).join('')}</div>`
+    : '';
+
+  const sections = [
+    job.description ? `<div class="job-detail-section"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Job Description</h4>${textToList(job.description)}</div>` : '',
+    job.responsibilities ? `<div class="job-detail-section"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Responsibilities</h4>${textToList(job.responsibilities)}</div>` : '',
+    job.requirements ? `<div class="job-detail-section"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Requirements</h4>${textToList(job.requirements)}</div>` : '',
+    job.qualifications ? `<div class="job-detail-section"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>Qualifications</h4>${textToList(job.qualifications)}</div>` : '',
+    job.benefits ? `<div class="job-detail-section"><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Benefits</h4>${textToList(job.benefits)}</div>` : ''
+  ].filter(Boolean).join('');
+
+  const noDetails = !sections;
+
+  document.getElementById('jobDetailContent').innerHTML = `
+    <div class="job-detail-header">
+      <button class="modal-close" onclick="closeJobDetailModal()" aria-label="Close">×</button>
+      <h2>${escapeHtml(job.title)}</h2>
+      ${metaItems ? `<div class="job-detail-meta">${metaItems}</div>` : ''}
+      ${tags}
+    </div>
+    <div class="job-detail-body">
+      ${sections || '<p style="color: var(--ink-soft); font-style: italic;">Detailed description coming soon. Apply now to express your interest!</p>'}
+      <div class="job-detail-actions">
+        <button class="btn-primary" onclick="closeJobDetailModal(); openApplyModal('${escapeHtml(job.title).replace(/'/g, "\\'")}')">Apply for this Position</button>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('jobDetailModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeJobDetailModal() {
+  document.getElementById('jobDetailModal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
 document.querySelectorAll('.modal').forEach(modal => {
   modal.addEventListener('click', (e) => {
     if (e.target === modal) {
@@ -572,23 +665,50 @@ document.getElementById('applyForm')?.addEventListener('submit', async (e) => {
 
 document.getElementById('hireForm')?.addEventListener('submit', async (e) => {
   e.preventDefault();
-  const formData = Object.fromEntries(new FormData(e.target));
+  const form = e.target;
+  const submitBtn = document.getElementById('hireSubmitBtn');
+
+  // Client-side validation
+  const fd = Object.fromEntries(new FormData(form));
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const PHONE_RE = /^[+]?[\d\s\-().]{7,20}$/;
+
+  if (!fd.companyName || !fd.contactName || !fd.email || !fd.phone || !fd.jobTitle || !fd.positions || !fd.jobDescription) {
+    showToast('Please fill in all required fields.', 'error');
+    return;
+  }
+  if (!EMAIL_RE.test(fd.email.trim())) {
+    showToast('Please enter a valid email address.', 'error');
+    return;
+  }
+  if (!PHONE_RE.test(fd.phone.trim())) {
+    showToast('Please enter a valid phone number.', 'error');
+    return;
+  }
+
+  // Prevent duplicate submission
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Submitting...';
+
   try {
     const res = await fetch('/api/hire', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData)
+      body: JSON.stringify(fd)
     });
     const data = await res.json();
     if (data.success) {
-      showToast('Hiring request submitted!', 'success');
-      e.target.reset();
+      showToast('Hiring request submitted successfully! We will contact you soon.', 'success');
+      form.reset();
       closeHireModal();
     } else {
       showToast(data.error || 'Something went wrong', 'error');
     }
   } catch (err) {
     showToast('Failed to submit. Please try again.', 'error');
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Submit Hiring Request';
   }
 });
 

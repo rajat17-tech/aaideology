@@ -7,7 +7,14 @@ const jobSchema = new mongoose.Schema({
   location: { type: String, default: '' },
   experience: { type: String, default: '' },
   description: { type: String, default: '' },
-  tags: { type: [String], default: [] }
+  tags: { type: [String], default: [] },
+  // Extended fields for public "View Details" functionality
+  department: { type: String, default: '' },
+  summary: { type: String, default: '' },
+  responsibilities: { type: String, default: '' },
+  requirements: { type: String, default: '' },
+  qualifications: { type: String, default: '' },
+  benefits: { type: String, default: '' }
 }, {
   timestamps: true
 });

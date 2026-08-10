@@ -38,7 +38,13 @@ router.post('/', requireAdmin, async (req, res) => {
       description: req.body.description || '',
       tags: Array.isArray(req.body.tags)
         ? req.body.tags
-        : (req.body.tags || '').split(',').map(t => t.trim()).filter(Boolean)
+        : (req.body.tags || '').split(',').map(t => t.trim()).filter(Boolean),
+      department: req.body.department || '',
+      summary: req.body.summary || '',
+      responsibilities: req.body.responsibilities || '',
+      requirements: req.body.requirements || '',
+      qualifications: req.body.qualifications || '',
+      benefits: req.body.benefits || ''
     });
     res.status(201).json(job);
   } catch (err) {
@@ -60,7 +66,7 @@ router.put('/:id', requireAdmin, async (req, res) => {
           : job.tags);
 
     // Apply updates (id is immutable — Mongoose _id can't be changed anyway)
-    const fields = ['title', 'type', 'salary', 'location', 'experience', 'description'];
+    const fields = ['title', 'type', 'salary', 'location', 'experience', 'description', 'department', 'summary', 'responsibilities', 'requirements', 'qualifications', 'benefits'];
     fields.forEach(f => { if (req.body[f] !== undefined) job[f] = req.body[f]; });
     job.tags = tags;
     await job.save();

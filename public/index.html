@@ -378,6 +378,12 @@
             <h4>Address</h4>
             <p id="contactAddress">Your Office Address, City, India</p>
           </div>
+          <div class="contact-card contact-hire-cta">
+            <button class="hire-talent-btn" onclick="openHireModal()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+              Hire Talent
+            </button>
+          </div>
         </div>
 
         <form class="contact-form reveal-right" id="contactForm">
@@ -426,7 +432,7 @@
           <a href="#services">Career Counselling</a>
           <a href="#services">Compliance</a>
         </div>
-        <div class="footer-links reveal reveal-delay-3">
+        <div class="footer-links reveal reveal-delay-3" id="footerContact">
           <h4>Contact</h4>
           <p>aaideologya@gmail.com</p>
           <p>+91-XXXXXXXXXX</p>
@@ -479,31 +485,110 @@
     </div>
   </div>
 
+  <!-- ==================== JOB DETAIL MODAL ==================== -->
+  <div class="modal" id="jobDetailModal">
+    <div class="modal-content job-detail-modal" id="jobDetailContent">
+      <!-- Dynamically populated by openJobDetailModal() in main.js -->
+    </div>
+  </div>
+
   <!-- ==================== HIRE MODAL ==================== -->
   <div class="modal" id="hireModal">
-    <div class="modal-content">
+    <div class="modal-content hire-modal">
       <button class="modal-close" onclick="closeHireModal()" aria-label="Close">×</button>
       <h2>Hire Talent</h2>
-      <form id="hireForm">
-        <div class="form-group">
-          <input type="text" name="companyName" placeholder="Company Name" required>
+      <p style="color: var(--ink-soft); font-size: 15px; margin-bottom: 24px;">Looking to hire? Tell us about your requirements and we'll find the perfect match.</p>
+      <form id="hireForm" class="hire-form" novalidate>
+        <!-- Company Information -->
+        <div class="hire-form-section">
+          <div class="hire-form-section-title">Company Information</div>
+          <div class="form-row">
+            <div class="form-group">
+              <input type="text" name="companyName" placeholder="Company Name *" required>
+            </div>
+            <div class="form-group">
+              <input type="text" name="contactName" placeholder="Contact Person Name *" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <input type="email" name="email" placeholder="Email Address *" required>
+            </div>
+            <div class="form-group">
+              <input type="tel" name="phone" placeholder="Phone Number *" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <input type="url" name="companyWebsite" placeholder="Company Website (optional)">
+            </div>
+            <div class="form-group">
+              <input type="text" name="industry" placeholder="Industry (optional)">
+            </div>
+          </div>
         </div>
-        <div class="form-group">
-          <input type="text" name="contactName" placeholder="Contact Person Name" required>
+
+        <!-- Hiring Requirements -->
+        <div class="hire-form-section">
+          <div class="hire-form-section-title">Hiring Requirements</div>
+          <div class="form-row">
+            <div class="form-group">
+              <input type="text" name="jobTitle" placeholder="Position / Job Title *" required>
+            </div>
+            <div class="form-group">
+              <input type="text" name="positions" placeholder="Number of Positions *" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <select name="employmentType">
+                <option value="" disabled selected>Employment Type</option>
+                <option value="Full Time">Full Time</option>
+                <option value="Part Time">Part Time</option>
+                <option value="Contract">Contract</option>
+                <option value="Internship">Internship</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <select name="workMode">
+                <option value="" disabled selected>Work Mode</option>
+                <option value="On-site">On-site</option>
+                <option value="Remote">Remote</option>
+                <option value="Hybrid">Hybrid</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <input type="text" name="experienceRequired" placeholder="Experience Required (e.g., 2-4 years)">
+            </div>
+            <div class="form-group">
+              <input type="text" name="requiredSkills" placeholder="Required Skills">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <input type="text" name="salaryRange" placeholder="Salary / Budget Range">
+            </div>
+            <div class="form-group">
+              <input type="text" name="hiringTimeline" placeholder="Hiring Timeline">
+            </div>
+          </div>
         </div>
-        <div class="form-group">
-          <input type="email" name="email" placeholder="Email" required>
+
+        <!-- Job Description -->
+        <div class="hire-form-section">
+          <div class="hire-form-section-title">Job Description</div>
+          <div class="form-group">
+            <textarea name="jobDescription" rows="5" placeholder="Job Description / Requirements *" required></textarea>
+          </div>
+          <div class="form-group">
+            <textarea name="additionalInfo" rows="3" placeholder="Additional Information / Message (optional)"></textarea>
+          </div>
         </div>
-        <div class="form-group">
-          <input type="tel" name="phone" placeholder="Phone Number" required>
-        </div>
-        <div class="form-group">
-          <input type="text" name="positions" placeholder="Number of Positions" required>
-        </div>
-        <div class="form-group">
-          <textarea name="requirements" rows="4" placeholder="Job Requirements & Description" required></textarea>
-        </div>
-        <button type="submit" class="btn-primary">Submit Hiring Request</button>
+
+        <button type="submit" class="btn-primary" id="hireSubmitBtn">Submit Hiring Request</button>
       </form>
     </div>
   </div>

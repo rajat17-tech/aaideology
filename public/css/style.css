@@ -1135,3 +1135,248 @@ body{ font-size: 16.5px; }
   .whatsapp-float{ right: 16px; bottom: 16px; width: 52px; height: 52px; }
   .whatsapp-float svg{ width: 27px; height: 27px; }
 }
+
+/* ============================================================
+   JOB DETAIL MODAL
+   ============================================================ */
+.modal-content.job-detail-modal{
+  max-width: 680px;
+  padding: 0;
+}
+.job-detail-header{
+  background: linear-gradient(135deg, var(--primary-deep) 0%, var(--primary) 100%);
+  color: var(--white);
+  padding: 36px 40px 28px;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+.job-detail-header h2{
+  color: var(--white);
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+.job-detail-header .modal-close{
+  background: rgba(255,255,255,.15);
+  color: var(--white);
+}
+.job-detail-header .modal-close:hover{ background: rgba(255,255,255,.3); }
+.job-detail-meta{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 12px;
+}
+.job-detail-meta-item{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: rgba(255,255,255,.85);
+  font-family: var(--body);
+}
+.job-detail-meta-item svg{ width: 15px; height: 15px; opacity: .7; }
+.job-detail-tags{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+.job-detail-tags .job-tag{
+  background: rgba(255,255,255,.15);
+  color: var(--white);
+  border: 1px solid rgba(255,255,255,.2);
+}
+.job-detail-body{
+  padding: 32px 40px 36px;
+}
+.job-detail-section{
+  margin-bottom: 28px;
+}
+.job-detail-section:last-child{ margin-bottom: 0; }
+.job-detail-section h4{
+  font-family: var(--display);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.job-detail-section h4 svg{ width: 18px; height: 18px; color: var(--primary-2); flex-shrink: 0; }
+.job-detail-section p,
+.job-detail-section li{
+  font-size: 15px;
+  color: var(--ink-soft);
+  line-height: 1.7;
+}
+.job-detail-section ul{
+  padding-left: 0;
+  list-style: none;
+}
+.job-detail-section ul li{
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 6px;
+}
+.job-detail-section ul li::before{
+  content: '•';
+  position: absolute;
+  left: 4px;
+  color: var(--primary-2);
+  font-weight: 700;
+}
+.job-detail-actions{
+  display: flex;
+  gap: 12px;
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+.job-detail-actions .btn-primary{ flex: 1; text-align: center; }
+@media (max-width: 600px){
+  .modal-content.job-detail-modal{ max-width: 100%; }
+  .job-detail-header{ padding: 28px 22px 22px; }
+  .job-detail-body{ padding: 24px 22px; }
+  .job-detail-header h2{ font-size: 19px; }
+}
+
+/* ============================================================
+   JOB CARD — button pair
+   ============================================================ */
+.job-card-buttons{
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+.job-card-buttons .btn-primary,
+.job-card-buttons .btn-secondary{
+  flex: 1;
+  text-align: center;
+  font-size: 14px;
+  padding: 12px 16px;
+}
+.job-summary{
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+/* ============================================================
+   HIRE TALENT — enhanced modal
+   ============================================================ */
+.modal-content.hire-modal{
+  max-width: 680px;
+}
+.hire-form-section{
+  margin-bottom: 6px;
+}
+.hire-form-section-title{
+  font-family: var(--display);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ink);
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.hire-form .form-row{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.hire-form .form-group select{
+  border: none;
+  border-bottom: 1px solid var(--line-strong);
+  background: transparent;
+  padding: 10px 2px;
+  font-family: var(--body);
+  font-size: 15.5px;
+  color: var(--ink);
+  transition: border-color .25s;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238489A0' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 4px center;
+  padding-right: 20px;
+}
+.hire-form .form-group select:focus{
+  outline: none;
+  border-bottom-color: var(--primary-2);
+}
+.hire-form .required-mark{ color: #B3261E; }
+.hire-form .field-note{
+  font-size: 12px;
+  color: var(--ink-faint);
+  margin-top: 4px;
+}
+.hire-form .validation-error{
+  font-size: 12.5px;
+  color: #B3261E;
+  margin-top: 4px;
+  display: none;
+}
+.hire-form .form-group.has-error input,
+.hire-form .form-group.has-error textarea,
+.hire-form .form-group.has-error select{
+  border-bottom-color: #B3261E;
+}
+.hire-form .form-group.has-error .validation-error{ display: block; }
+@media (max-width: 600px){
+  .modal-content.hire-modal{ max-width: 100%; padding: 28px 22px; }
+  .hire-form .form-row{ grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   HIRE TALENT — CTA button in contact section
+   ============================================================ */
+.contact-hire-cta{
+  margin-top: 22px;
+  text-align: center;
+}
+.hire-talent-btn{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 16px 34px;
+  border-radius: 100px;
+  border: 2px solid var(--primary-2);
+  background: transparent;
+  color: var(--primary-2);
+  transition: all .3s var(--ease);
+  cursor: pointer;
+}
+.hire-talent-btn:hover{
+  background: var(--primary-2);
+  color: var(--white);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(79,70,229,.25);
+}
+.hire-talent-btn svg{ width: 20px; height: 20px; }
+
+/* ============================================================
+   FOOTER — contact links
+   ============================================================ */
+.footer-contact-links a{
+  display: block;
+  font-size: 14.5px;
+  color: rgba(255,255,255,.7);
+  padding: 4px 0;
+  transition: color .2s;
+  text-decoration: none;
+}
+.footer-contact-links a:hover{ color: var(--white); }
+.footer-contact-label{
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: rgba(255,255,255,.35);
+  margin-top: 10px;
+  margin-bottom: 2px;
+}
+.footer-contact-label:first-child{ margin-top: 0; }
+
